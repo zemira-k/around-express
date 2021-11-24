@@ -1,16 +1,19 @@
-const router = require("express").Router(); // creating a router
-const fsPromises = require("fs").promises;
-const path = require("path");
-const filepath = path.join(__dirname, "../data/cards.json");
+const router = require('express').Router(); // creating a router
 
-router.get("/cards", (req, res) => {
+const fsPromises = require('fs').promises;
+
+const path = require('path');
+
+const filepath = path.join(__dirname, '../data/cards.json');
+
+router.get('/cards', (req, res) => {
   fsPromises
-    .readFile(filepath, { encoding: "utf8" })
+    .readFile(filepath, { encoding: 'utf8' })
     .then((cards) => {
-      res.status("200").send(JSON.parse(cards));
+      res.status(200).send(JSON.parse(cards));
     })
     .catch(() => {
-      res.status("500").send({ error: "An error has occurred on the server" });
+      res.status(500).send({ message: 'An error has occurred on the server' });
     });
 });
 

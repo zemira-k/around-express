@@ -1,7 +1,7 @@
 # http://editorconfig.org
 
 # A special property that should be specified at the very top of the file.
-# When set to true, it stops Editorconfig from searching any higher 
+# When set to true, it stops Editorconfig from searching any higher
 # in the directory tree for .editorconfig files.
 root = true
 
@@ -25,6 +25,8 @@ charset = utf-8
 # Denotes whether to trim whitespace at the end of lines
 # Possible values - true, false
 trim_trailing_whitespace = true
+
+quote_type = single
 
 [*.md]
 trim_trailing_whitespace = false

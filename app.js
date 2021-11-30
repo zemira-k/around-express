@@ -1,9 +1,25 @@
 const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 const cards = require('./routes/cards'); // importing router
 const users = require('./routes/users'); // importing router
 
 const app = express();
 const { PORT = 3000 } = process.env;
+mongoose.connect('mongodb://localhost:27017/aroundb', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use((req, res, next) => {
+  req.user = {
+    _id: '61a5ede0654b91b1e397b427',
+  };
+
+  next();
+});
 
 app.use('/', cards); // starting cards router
 app.use('/', users); // starting users router

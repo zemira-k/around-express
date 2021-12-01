@@ -1,5 +1,15 @@
 const Card = require('../models/card');
 
+const costumErrorCatch = (err, res) => {
+  if (err.name === 'CastError') {
+    res.status(400).send({ message: 'Invalid card id' });
+  } else if (err.statusCode === 404) {
+    res.status(404).send({ message: err.message });
+  } else {
+    res.status(500).send({ message: err.message || 'internal server error' });
+  }
+};
+
 const getAllCards = (req, res) => {
   Card.find({})
     .then((cards) => {
@@ -36,15 +46,7 @@ const deleteCard = (req, res) => {
       res.status(200).send(card);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Invalid card id' });
-      } else if (err.statusCode === 404) {
-        res.status(404).send({ message: err.message });
-      } else {
-        res
-          .status(500)
-          .send({ message: err.message || 'internal server error' });
-      }
+      costumErrorCatch(err, res);
     });
 };
 
@@ -61,15 +63,7 @@ const likeCard = (req, res) => {
     })
     .then((card) => res.send({ data: card }))
     .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Invalid card id' });
-      } else if (err.statusCode === 404) {
-        res.status(404).send({ message: err.message });
-      } else {
-        res
-          .status(500)
-          .send({ message: err.message || 'internal server error' });
-      }
+      costumErrorCatch(err, res);
     });
 };
 
@@ -88,15 +82,7 @@ const unlikeCard = (req, res) => {
       res.status(200).send(card);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Invalid card id' });
-      } else if (err.statusCode === 404) {
-        res.status(404).send({ message: err.message });
-      } else {
-        res
-          .status(500)
-          .send({ message: err.message || 'internal server error' });
-      }
+      costumErrorCatch(err, res);
     });
 };
 

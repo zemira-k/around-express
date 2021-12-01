@@ -1,5 +1,15 @@
 const User = require('../models/user');
 
+const costumErrorCatch = (err, res) => {
+  if (err.name === 'CastError') {
+    res.status(400).send({ message: 'Invalid user id' });
+  } else if (err.statusCode === 404) {
+    res.status(404).send({ message: err.message });
+  } else {
+    res.status(500).send({ message: err.message || 'internal server error' });
+  }
+};
+
 const getAllUsers = (req, res) => {
   User.find({})
     .then((users) => {
@@ -21,15 +31,7 @@ const getUser = (req, res) => {
       res.status(200).send(user);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Invalid user id' });
-      } else if (err.statusCode === 404) {
-        res.status(404).send({ message: err.message });
-      } else {
-        res
-          .status(500)
-          .send({ message: err.message || 'internal server error' });
-      }
+      costumErrorCatch(err, res);
     });
 };
 
@@ -38,24 +40,18 @@ const createUser = (req, res) => {
   User.create({ name, about, avatar })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Invalid user id' });
-      } else {
-        res
-          .status(500)
-          .send({ message: err.message || 'internal server error' });
-      }
+      costumErrorCatch(err, res);
     });
 };
 
 const updateProfile = (req, res) => {
   User.findByIdAndUpdate(
     req.user._id,
-    { name: 'new name', about: 'new description' },
+    { name: 'new', about: 'new' },
     {
       new: true, // the then handler receives the updated entry as input
       runValidators: true, // the data will be validated before the update
-      upsert: true, // if the user entry wasn't found, it will be created
+      upsert: false, // if the user entry wasn't found, it will be created
     },
   )
     .orFail(() => {
@@ -65,15 +61,7 @@ const updateProfile = (req, res) => {
     })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Invalid user id' });
-      } else if (err.statusCode === 404) {
-        res.status(404).send({ message: err.message });
-      } else {
-        res
-          .status(500)
-          .send({ message: err.message || 'internal server error' });
-      }
+      costumErrorCatch(err, res);
     });
 };
 
@@ -87,7 +75,7 @@ const updateAvatar = (req, res) => {
     {
       new: true, // the then handler receives the updated entry as input
       runValidators: true, // the data will be validated before the update
-      upsert: true, // if the user entry wasn't found, it will be created
+      upsert: false, // if the user entry wasn't found, it will be created
     },
   )
     .orFail(() => {
@@ -97,15 +85,7 @@ const updateAvatar = (req, res) => {
     })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Invalid user id' });
-      } else if (err.statusCode === 404) {
-        res.status(404).send({ message: err.message });
-      } else {
-        res
-          .status(500)
-          .send({ message: err.message || 'internal server error' });
-      }
+      costumErrorCatch(err, res);
     });
 };
 

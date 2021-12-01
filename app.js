@@ -1,11 +1,17 @@
 const express = require('express');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const cards = require('./routes/cards'); // importing router
-const users = require('./routes/users'); // importing router
 
 const app = express();
 const { PORT = 3000 } = process.env;
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const helmet = require('helmet');
+
+const cards = require('./routes/cards'); // importing router
+
+const users = require('./routes/users'); // importing router
+
+app.use(helmet());
+
 mongoose.connect('mongodb://localhost:27017/aroundb', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
